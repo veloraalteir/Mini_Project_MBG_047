@@ -3,6 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DistributionLookupController;
 use App\Http\Controllers\EvidenceController;
+use App\Http\Controllers\MasterDistributionController;
+use App\Http\Controllers\MasterSchoolController;
 use App\Http\Controllers\RekapController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ReviewController;
@@ -40,5 +42,16 @@ Route::middleware('auth')->group(function () {
         });
 
         Route::get('/rekap', [RekapController::class, 'index'])->name('rekap');
+    });
+
+    // Fitur koordinator: data pendukung
+    Route::middleware('role:koordinator')->prefix('master')->name('master.')->group(function () {
+        Route::get('/schools', [MasterSchoolController::class, 'index'])->name('schools.index');
+        Route::post('/schools', [MasterSchoolController::class, 'store'])->name('schools.store');
+        Route::delete('/schools/{school}', [MasterSchoolController::class, 'destroy'])->name('schools.destroy');
+
+        Route::get('/distributions', [MasterDistributionController::class, 'index'])->name('distributions.index');
+        Route::post('/distributions', [MasterDistributionController::class, 'store'])->name('distributions.store');
+        Route::delete('/distributions/{distribution}', [MasterDistributionController::class, 'destroy'])->name('distributions.destroy');
     });
 });
