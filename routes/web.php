@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DistributionLookupController;
 use App\Http\Controllers\EvidenceController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -27,5 +28,12 @@ Route::middleware('auth')->group(function () {
     // Fitur pelapor
     Route::middleware('role:pelapor')->group(function () {
         Route::resource('reports', ReportController::class)->except(['destroy']);
+    });
+
+    // Fitur pemantau & koordinator
+    Route::middleware('role:pemantau,koordinator')->prefix('review')->name('review.')->group(function () {
+        Route::get('/', [ReviewController::class, 'index'])->name('index');
+        Route::get('/{report}', [ReviewController::class, 'show'])->name('show');
+        Route::post('/{report}/transition', [ReviewController::class, 'transition'])->name('transition');
     });
 });
